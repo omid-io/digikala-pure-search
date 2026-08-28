@@ -10,6 +10,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-Chrome%20%7C%20Firefox%20%7C%20Edge%20%7C%20Brave-green?style=for-the-badge&logo=googlechrome)](https://github.com/omid-io/digikala-pure-search)
 [![Tool](https://img.shields.io/badge/Supports-Tampermonkey%20%7C%20uBlock%20%7C%20Extension-orange?style=for-the-badge)](https://github.com/omid-io/digikala-pure-search)
+[![Topics](https://img.shields.io/badge/Keywords-Digikala%20%7C%20AdBlock%20%7C%20UserScript%20%7C%20Persian-ef394e?style=for-the-badge)](https://github.com/omid-io/digikala-pure-search)
 
 [نصب با تمپرمانکی](#-روش-اول-نصب-سریع-با-تمپرمانکی-پیشنهادی) • [نصب به عنوان افزونه کروم](#-روش-دوم-نصب-مستقیم-افزونه-روی-مرورگر) • [قوانین uBlock Origin](#-روش-سوم-استفاده-در-ublock-origin) • [ویژگی‌ها](#-قابلیت‌های-کلیدی)
 
@@ -80,6 +81,12 @@
 اگر از افزونه معروف **uBlock Origin** استفاده می‌کنید:
 1. وارد تنظیمات uBlock شده و به تب **My Filters** بروید.
 2. کدهای داخل فایل **[ublock-filter.txt](ublock-filter.txt)** را کپی کرده و در انتهای لیست قرار دهید و دکمه **Apply changes** را بزنید.
+
+---
+
+## 🏷️ برچسب‌ها و کلمات کلیدی (Topics & Keywords)
+
+`digikala` | `tampermonkey` | `userscript` | `adblock` | `adblocker` | `ublock-origin` | `persian` | `iran` | `chrome-extension` | `digikala-adblocker` | `sponsored-products` | `ecommerce` | `shopping` | `anti-ad` | `farsi` | `greasemonkey`
 
 ---
 
