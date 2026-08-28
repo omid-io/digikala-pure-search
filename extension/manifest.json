@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "دیجی‌کالا بدون تبلیغ | Digikala Pure Search",
+  "version": "3.0.0",
+  "description": "حذف خودکار کالاهای اسپانسر شده و تبلیغات از نتایج جستجو و دسته‌بندی‌های دیجی‌کالا",
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.digikala.com/*"],
+      "js": ["content.js"],
+      "css": ["style.css"],
+      "run_at": "document_start",
+      "world": "MAIN"
+    }
+  ]
+}

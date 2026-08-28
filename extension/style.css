@@ -1,0 +1,14 @@
+article:has(use[*|href="#ads"]),
+article:has(use[href="#ads"]),
+article:has(svg[style*="--color-ad"]),
+article:has(a[href*="ad_variant_id"]),
+div[data-testid="product-card"]:has(a[href*="ad_variant_id"]),
+div[data-testid="product-card"]:has(use[*|href="#ads"]),
+div[class*="ProductList__item"]:has(a[href*="ad_variant_id"]),
+div[class*="ProductList__item"]:has(use[*|href="#ads"]),
+div[class*="SponsoredBrand"],
+div[class*="c-adplacement"],
+a[href*="banner_id"],
+.dk-purged-ad {
+    display: none !important;
+}
