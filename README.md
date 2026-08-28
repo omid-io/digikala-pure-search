@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![Digikala Pure Search Banner](assets/banner.jpg)
+![Digikala Pure Search Banner](assets/banner.png)
 
 **حذف هوشمند و قطعی تمام تبلیغات، کالاهای اسپانسر و نشان‌های «سفارشی» از دیجی‌کالا**  
 *نمایش رتبه‌بندی و ترتیب ۱۰۰٪ واقعی محصولات در فیلترهای پرفروش‌ترین، ارزان‌ترین، محبوب‌ترین و تمامی جستجوها*
