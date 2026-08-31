@@ -1,20 +1,14 @@
 ! Title: Digikala Pure Search Filters
-! Description: حذف تبلیغات، کالاهای سفارشی و اسپانسر شده از دیجی‌کالا
+! Description: Hides sponsored products, promotional ads, and custom ad badges on Digikala
+! Author: Omid Zaferi (https://github.com/omid-io)
 ! Homepage: https://github.com/omid-io/digikala-pure-search
-! License: MIT
 
-! حذف کارت‌های محصول دارای برچسب آگهی یا سفارشی
-www.digikala.com##article:has(use[*|href="#ads"])
-www.digikala.com##article:has(use[href="#ads"])
-www.digikala.com##article:has(svg[style*="--color-ad"])
-www.digikala.com##article:has(a[href*="ad_variant_id"])
-www.digikala.com##article:has(span.text-neutral-500:has-text(/^سفارشی$/))
-www.digikala.com##article:has(span.text-neutral-500:has-text(/^آگهی$/))
-www.digikala.com##div[data-testid="product-card"]:has(a[href*="ad_variant_id"])
-www.digikala.com##div[data-testid="product-card"]:has(use[*|href="#ads"])
-www.digikala.com##div[class*="ProductList__item"]:has(a[href*="ad_variant_id"])
-
-! حذف بنرهای تبلیغاتی درون لیست
-www.digikala.com##div[class*="SponsoredBrand"]
-www.digikala.com##div[class*="c-adplacement"]
-www.digikala.com##a[href*="banner_id"]
+digikala.com##article:has(span:has-text(/^سفارشی$/))
+digikala.com##article:has(span:has-text(/^آگهی$/))
+digikala.com##article:has(span:has-text(/^اسپانسری$/))
+digikala.com##div[data-cro-id*="ad_"]
+digikala.com##div[data-cro-id*="sponsored"]
+digikala.com##a[href*="ad_type"]:upward(article)
+digikala.com##a[href*="adclick"]:upward(article)
+digikala.com##div[data-cro-id*="banner"]
+digikala.com##div[data-cro-id*="promotion"]
