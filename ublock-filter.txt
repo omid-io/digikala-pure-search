@@ -2,13 +2,33 @@
 ! Description: Hides sponsored products, promotional ads, and custom ad badges on Digikala
 ! Author: Omid Zaferi (https://github.com/omid-io)
 ! Homepage: https://github.com/omid-io/digikala-pure-search
+! Version: 1.1.0
 
+! 1. Collapse sponsored product cards at grid-item level
+digikala.com##[class*="ProductList__item"]:has(dds-icon[name="badge-ad"])
+digikala.com##[class*="ProductList__item"]:has(span:has-text(/^سفارشی$/))
+digikala.com##[class*="ProductList__item"]:has(span:has-text(/^آگهی$/))
+digikala.com##[class*="ProductList__item"]:has(span:has-text(/^اسپانسری$/))
+digikala.com##[class*="ProductList__item"]:has(a[href*="ad_variant_id"])
+digikala.com##[class*="ProductList__item"]:has(a[href*="ad_type"])
+digikala.com##[class*="ProductList__item"]:has(a[href*="adclick"])
+digikala.com##[class*="ProductList__item"]:has([data-cro-id*="ad_"])
+digikala.com##[class*="ProductList__item"]:has([data-cro-id*="sponsored"])
+
+! 2. Fallback article-level filtering
+digikala.com##article:has(dds-icon[name="badge-ad"])
 digikala.com##article:has(span:has-text(/^سفارشی$/))
 digikala.com##article:has(span:has-text(/^آگهی$/))
 digikala.com##article:has(span:has-text(/^اسپانسری$/))
+digikala.com##article:has(a[href*="ad_variant_id"])
+
+! 3. Sponsored swiper and carousel blocks
+digikala.com##div:has(> .swiper:has(dds-icon[name="badge-ad"]))
+digikala.com##div:has(> div > .swiper:has(dds-icon[name="badge-ad"]))
+digikala.com##.swiper:has(dds-icon[name="badge-ad"])
+
+! 4. Promo banners inside search and category lists
 digikala.com##div[data-cro-id*="ad_"]
 digikala.com##div[data-cro-id*="sponsored"]
-digikala.com##a[href*="ad_type"]:upward(article)
-digikala.com##a[href*="adclick"]:upward(article)
 digikala.com##div[data-cro-id*="banner"]
 digikala.com##div[data-cro-id*="promotion"]

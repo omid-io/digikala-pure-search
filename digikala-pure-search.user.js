@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Digikala Pure Search | حذف تبلیغات و کالاهای اسپانسری دیجی‌کالا
+// @name         Digikala Pure Search | حذف تبلیغات و کالاهای اسپانسری دیجی کالا
 // @namespace    https://github.com/omid-io
-// @version      1.0.0
-// @description  حذف هوشمند و خودکار کالاهای اسپانسری، آگهی‌ها، برچسب‌های سفارشی و بنرهای مزاحم از نتایج جستجو و دسته‌بندی‌های دیجی‌کالا برای مشاهده رتبه‌بندی واقعی
+// @version      1.1.0
+// @description  حذف هوشمند، فوری و خودکار کالاهای اسپانسری، آگهی ها، برچسب های سفارشی، کاروسل های اسپانسری و بنرهای مزاحم از تمام نتایج جستجو و دسته بندی های دیجی کالا
 // @author       Omid Zaferi (https://github.com/omid-io)
 // @match        https://*.digikala.com/*
 // @match        https://digikala.com/*
@@ -19,25 +19,42 @@
 (function () {
     'use strict';
 
-    // 1. تزریق استایل‌های اولیه جهت حذف پرش تصویر (Zero-Flicker CSS Injection)
-    const injectedStyles = document.createElement('style');
-    injectedStyles.textContent = `
-        /* مخفی‌سازی فوری المان‌ها و کارت‌های دارای نشان آگهی */
-        [data-ad="true"],
-        [data-sponsored="true"],
+    // 1. تزریق استایل های اولیه فوری جهت حذف بدون پرش (Zero-Flicker CSS Injection)
+    const styleEl = document.createElement('style');
+    styleEl.id = 'digi-pure-style';
+    styleEl.textContent = `
+        /* مخفی سازی فوری در سطح گرید برای جلوگیری از خالی ماندن جای کالا */
+        [class*="ProductList__item"]:has(dds-icon[name="badge-ad"]),
+        [class*="ProductList__item"]:has(a[href*="ad_variant_id"]),
+        [class*="ProductList__item"]:has(a[href*="ad_type"]),
+        [class*="ProductList__item"]:has(a[href*="adclick"]),
+        [class*="ProductList__item"]:has([data-cro-id*="ad_"]),
+        [class*="ProductList__item"]:has([data-cro-id*="sponsored"]),
+        article:has(dds-icon[name="badge-ad"]),
+        article:has(a[href*="ad_variant_id"]),
+
+        /* حذف کاروسل های اسپانسری و برندهای سفارشی */
+        div:has(> .swiper:has(dds-icon[name="badge-ad"])),
+        div:has(> div > .swiper:has(dds-icon[name="badge-ad"])),
+        .swiper:has(dds-icon[name="badge-ad"]),
+
+        /* حذف بنرهای تبلیغاتی لابلای لیست کالاها */
+        div[data-cro-id*="banner"],
+        div[data-cro-id*="promotion"],
+        div[data-cro-id*="ad_"],
         .digi-pure-filtered {
             display: none !important;
         }
 
-        /* بج نشانگر وضعیت سرچ خالص */
+        /* نشانگر وضعیت سرچ خالص */
         #digi-pure-badge {
             position: fixed;
             bottom: 24px;
             left: 24px;
-            background: rgba(18, 20, 29, 0.92);
+            background: rgba(18, 20, 29, 0.94);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(0, 229, 255, 0.3);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), 0 0 16px rgba(0, 229, 255, 0.15);
+            border: 1px solid rgba(0, 229, 255, 0.35);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 16px rgba(0, 229, 255, 0.15);
             color: #f1f5f9;
             font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Tahoma, sans-serif;
             font-size: 12px;
@@ -50,11 +67,12 @@
             direction: rtl;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             user-select: none;
+            cursor: pointer;
         }
         #digi-pure-badge:hover {
             transform: translateY(-2px);
             border-color: #00e5ff;
-            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45), 0 0 20px rgba(0, 229, 255, 0.25);
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 229, 255, 0.3);
         }
         #digi-pure-badge .dot {
             width: 8px;
@@ -62,28 +80,29 @@
             background: #10b981;
             border-radius: 50%;
             box-shadow: 0 0 8px #10b981;
-            animation: pulse-dot 2s infinite ease-in-out;
+            animation: digi-pulse 2s infinite ease-in-out;
         }
-        @keyframes pulse-dot {
+        @keyframes digi-pulse {
             0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(0.85); }
+            50% { opacity: 0.4; transform: scale(0.85); }
         }
     `;
-    (document.head || document.documentElement).appendChild(injectedStyles);
+    (document.head || document.documentElement).appendChild(styleEl);
 
     let filteredCount = 0;
-    let badgeElement = null;
+    let badgeEl = null;
 
     function updateBadge() {
-        if (!badgeElement) {
-            badgeElement = document.createElement('div');
-            badgeElement.id = 'digi-pure-badge';
-            badgeElement.title = 'توسعه‌داده‌شده توسط امید ظفری (Omid Zaferi) | omid.io';
-            badgeElement.innerHTML = `
+        if (!document.body) return;
+        if (!badgeEl) {
+            badgeEl = document.createElement('div');
+            badgeEl.id = 'digi-pure-badge';
+            badgeEl.title = 'توسعه داده شده توسط امید ظفری (Omid Zaferi) | omid.io';
+            badgeEl.innerHTML = `
                 <span class="dot"></span>
-                <span>سرچ خالص دیجی‌کالا: <strong id="digi-pure-count" style="color: #00e5ff;">۰</strong> تبلیغ حذف شد</span>
+                <span>سرچ خالص دیجی کالا: <strong id="digi-pure-count" style="color: #00e5ff;">۰</strong> تبلیغ حذف شد</span>
             `;
-            document.body.appendChild(badgeElement);
+            document.body.appendChild(badgeEl);
         }
         const countSpan = document.getElementById('digi-pure-count');
         if (countSpan) {
@@ -91,84 +110,145 @@
         }
     }
 
-    // 2. فیلتر کردن هوشمند کارت‌های کالا در ساختار DOM
-    const adKeywords = ['آگهی', 'سفارشی', 'اسپانسری', 'Sponsored', 'Ad'];
+    const adKeywords = ['سفارشی', 'آگهی', 'اسپانسری', 'Sponsored', 'Ad'];
 
-    function isAdElement(element) {
-        if (!element || element.classList?.contains('digi-pure-checked')) return false;
-        element.classList.add('digi-pure-checked');
+    function isAdNode(el) {
+        if (!el) return false;
 
-        // بررسی برچسب‌های متنی داخل المان
-        const textContent = element.textContent || '';
-        for (const kw of adKeywords) {
-            // جستجوی واژه‌های تبلیغاتی در تگ‌های کوچک یا بج‌ها
-            const badges = element.querySelectorAll('span, p, div, small');
-            for (const b of badges) {
-                if (b.children.length === 0 && b.textContent.trim() === kw) {
+        // ۱. آیکون رسمی آگهی در دیجی کالا
+        if (el.querySelector('dds-icon[name="badge-ad"]')) return true;
+
+        // ۲. لینک های حاوی پارامترهای تبلیغاتی و ادوارینت
+        const links = el.querySelectorAll('a[href]');
+        for (const a of links) {
+            const href = a.getAttribute('href') || '';
+            if (href.includes('ad_variant_id') || href.includes('ad_type') || href.includes('adclick')) {
+                return true;
+            }
+        }
+        if (el.tagName === 'A') {
+            const selfHref = el.getAttribute('href') || '';
+            if (selfHref.includes('ad_variant_id') || selfHref.includes('ad_type') || selfHref.includes('adclick')) {
+                return true;
+            }
+        }
+
+        // ۳. اتریبیوت های رهگیری تبلیغات و CRO
+        if (
+            el.querySelector('[data-cro-id*="ad_"]') ||
+            el.querySelector('[data-cro-id*="sponsored"]') ||
+            el.hasAttribute('data-ad') ||
+            el.hasAttribute('data-sponsored')
+        ) {
+            return true;
+        }
+
+        // ۴. متن برچسب های داخل کارت
+        const leafNodes = el.querySelectorAll('span, div, p, small');
+        for (const node of leafNodes) {
+            if (node.children.length === 0) {
+                const text = node.textContent.trim();
+                if (adKeywords.includes(text)) {
                     return true;
                 }
             }
         }
 
-        // بررسی اتریبیوت‌های تبلیغاتی دیجی‌کالا
-        if (
-            element.querySelector('[data-cro-id*="ad_"]') ||
-            element.querySelector('[data-cro-id*="sponsored"]') ||
-            element.querySelector('a[href*="ad_type"]') ||
-            element.querySelector('a[href*="adclick"]')
-        ) {
-            return true;
-        }
-
         return false;
     }
 
-    function cleanDOMProducts() {
-        // شناسایی لینک‌های محصولات و محفظه کالاهای دیجی‌کالا
-        const productAnchors = document.querySelectorAll('a[href*="/product/dkp-"]');
-        productAnchors.forEach(anchor => {
-            // پیدا کردن کارت کانتینر والد محصول
-            const card = anchor.closest('article') || anchor.closest('[data-product-box="true"]') || anchor.closest('.product-list_ProductList__item__') || anchor.parentElement;
-            if (card && !card.classList.contains('digi-pure-filtered')) {
-                if (isAdElement(card)) {
-                    card.classList.add('digi-pure-filtered');
-                    card.style.display = 'none';
+    function cleanDOM() {
+        let changed = false;
+
+        // الف) پاکسازی اسلایدرها و کاروسل های اسپانسری بین نتایج
+        const swipers = document.querySelectorAll('.swiper, [class*="swiper"]');
+        swipers.forEach(swiper => {
+            if (isAdNode(swiper)) {
+                const container = swiper.closest('div[class*="items-center"]') || swiper.parentElement;
+                if (container && !container.classList.contains('digi-pure-filtered')) {
+                    container.classList.add('digi-pure-filtered');
+                    container.style.display = 'none';
                     filteredCount++;
-                    updateBadge();
+                    changed = true;
                 }
             }
         });
 
-        // حذف بنرهای تبلیغاتی لابلای لیست محصولات
-        const promoBanners = document.querySelectorAll('div[data-cro-id*="banner"], div[data-cro-id*="promotion"]');
-        promoBanners.forEach(banner => {
-            if (!banner.classList.contains('digi-pure-filtered')) {
-                banner.classList.add('digi-pure-filtered');
-                banner.style.display = 'none';
+        // ب) پاکسازی کارت های کالا در تمام صفحات جستجو و دسته بندی ها
+        const candidates = document.querySelectorAll('article, [class*="ProductList__item"], [data-product-box="true"]');
+        candidates.forEach(item => {
+            if (item.classList.contains('digi-pure-filtered')) return;
+
+            if (isAdNode(item)) {
+                // پیدا کردن محفظه کامل خانه گرید جهت حفظ تقارن و چیدمان منظم صفحه
+                const gridCell = item.closest('[class*="ProductList__item"]') || item.closest('article') || item;
+                if (gridCell && !gridCell.classList.contains('digi-pure-filtered')) {
+                    gridCell.classList.add('digi-pure-filtered');
+                    gridCell.style.display = 'none';
+                    filteredCount++;
+                    changed = true;
+                }
             }
         });
+
+        // ج) پاکسازی بنرهای تبلیغاتی تعبیه شده در بین لیست محصولات
+        const banners = document.querySelectorAll('div[data-cro-id*="banner"], div[data-cro-id*="promotion"], div[data-cro-id*="ad"]');
+        banners.forEach(b => {
+            if (!b.classList.contains('digi-pure-filtered')) {
+                b.classList.add('digi-pure-filtered');
+                b.style.display = 'none';
+                filteredCount++;
+                changed = true;
+            }
+        });
+
+        if (changed) {
+            updateBadge();
+        }
     }
 
-    // 3. پایش مداوم با MutationObserver برای Infinite Scroll و جابجایی بین صفحات
-    const observer = new MutationObserver(() => {
-        cleanDOMProducts();
-    });
+    // پایش هوشمند با بهینه سازی فریم ریت (rAF Debounced Observer)
+    let isScheduled = false;
+    function scheduleClean() {
+        if (!isScheduled) {
+            isScheduled = true;
+            requestAnimationFrame(() => {
+                cleanDOM();
+                isScheduled = false;
+            });
+        }
+    }
+
+    // رهگیری ناوبری کلاینت در Next.js SPA (تغییر دسته بندی، مرتب سازی، سرچ)
+    function hookHistory() {
+        const pushState = history.pushState;
+        history.pushState = function () {
+            pushState.apply(this, arguments);
+            scheduleClean();
+        };
+
+        const replaceState = history.replaceState;
+        history.replaceState = function () {
+            replaceState.apply(this, arguments);
+            scheduleClean();
+        };
+
+        window.addEventListener('popstate', scheduleClean);
+    }
+
+    const observer = new MutationObserver(scheduleClean);
 
     function init() {
-        cleanDOMProducts();
+        cleanDOM();
+        updateBadge();
+        hookHistory();
+
         if (document.body) {
-            observer.observe(document.body, {
-                childList: true,
-                subtree: true
-            });
-            updateBadge();
+            observer.observe(document.body, { childList: true, subtree: true });
         } else {
             document.addEventListener('DOMContentLoaded', () => {
-                observer.observe(document.body, {
-                    childList: true,
-                    subtree: true
-                });
                 updateBadge();
+                observer.observe(document.body, { childList: true, subtree: true });
             });
         }
     }
@@ -179,5 +259,5 @@
         init();
     }
 
-    console.log('%c🚀 Digikala Pure Search Active | Developer: Omid Zaferi (https://github.com/omid-io)', 'color: #00e5ff; font-weight: bold; font-size: 12px;');
+    console.log('%c🚀 Digikala Pure Search v1.1.0 Active | Developer: Omid Zaferi (https://github.com/omid-io)', 'color: #00e5ff; font-weight: bold; font-size: 12px;');
 })();
