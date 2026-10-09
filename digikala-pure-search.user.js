@@ -66,23 +66,6 @@
             display: none !important;
         }
 
-        /* یکپارچه سازی گرید مجازی برای پر کردن فضاهای خالی */
-        .product-list-virtual-feed > div {
-            display: grid !important;
-            grid-template-columns: repeat(4, minmax(0px, 1fr)) !important;
-            gap: 0px !important;
-        }
-
-        @media (max-width: 1024px) {
-            .product-list-virtual-feed > div {
-                grid-template-columns: repeat(2, minmax(0px, 1fr)) !important;
-            }
-        }
-
-        .product-list-virtual-feed > div > div,
-        .product-list-virtual-feed > div > div > div[style*="grid"] {
-            display: contents !important;
-        }
         div[data-cro-id*="ad_"],
         .digi-pure-filtered {
             display: none !important;

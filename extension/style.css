@@ -53,30 +53,7 @@ div[data-cro-id*="ad_"],
     display: none !important;
 }
 
-/* ۴. یکپارچه سازی گرید مجازی برای پر کردن فضاهای خالی ناشی از حذف محصولات */
-.product-list-virtual-feed > div {
-    display: grid !important;
-    gap: 0px !important;
-}
-
-@media (max-width: 1024px) {
-    .product-list-virtual-feed > div {
-        grid-template-columns: repeat(2, minmax(0px, 1fr)) !important;
-    }
-}
-
-@media (min-width: 1024px) {
-    .product-list-virtual-feed > div {
-        grid-template-columns: repeat(4, minmax(0px, 1fr)) !important;
-    }
-}
-
-.product-list-virtual-feed > div > div,
-.product-list-virtual-feed > div > div > div[style*="grid"] {
-    display: contents !important;
-}
-
-/* در صورت غیرفعال شدن هر گزینه توسط کاربر در پاپ آپ */
+/* ۴. در صورت غیرفعال شدن هر گزینه توسط کاربر در پاپ آپ */
 html.dk-allow-sponsored [class*="ProductList__item"]:has(dds-icon[name="badge-ad"]),
 html.dk-allow-sponsored article:has(dds-icon[name="badge-ad"]),
 html.dk-allow-sponsored .digi-pure-ad-filtered {
