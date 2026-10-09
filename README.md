@@ -63,13 +63,20 @@
 ---
 
 <a id="chrome-extension"></a>
-### 🔹 روش سوم: نصب دستی پوشه در کروم (Load Unpacked)
+### 🔹 روش سوم: نصب دستی پوشه در کروم (Load Unpacked - استاندارد جهانی)
 
-اگر می خواهید پوشه را مستقیما در تنظیمات مرورگر لود کنید:
+<div align="center">
 
-1. در مرورگر به آدرس `chrome://extensions` بروید.
-2. در بالا سمت راست، کلید **Developer mode** را روشن کنید.
-3. دکمه **Load unpacked** را بزنید و پوشه **`extension`** را انتخاب کنید. افزونه با پنل کنترلی مدرن فعال می شود!
+![آموزش تصویری نصب افزونه با Load unpacked در کروم](assets/install.gif)
+
+</div>
+
+1. فایل زیپ پروژه را [دانلود](https://github.com/omid-io/digikala-pure-search/archive/refs/heads/main.zip) و آن را از حالت فشرده خارج (Extract) کنید.
+2. در مرورگر کروم به آدرس `chrome://extensions` بروید.
+3. در بالا سمت راست، کلید **Developer mode** را روشن کنید.
+4. دکمه **Load unpacked** را بزنید و پوشه **`extension`** را انتخاب کنید. افزونه با پنل کنترلی مدرن بلافاصله فعال می شود!
+
+🎥 **[مشاهده ویدیوی ۳۰ ثانیه‌ای آموزش در یوتیوب](https://www.youtube.com/watch?v=osha8U8m3gM)** • **[مشاهده در آپارات](https://www.aparat.com/result/%D9%86%D8%B5%D8%A8_%D8%A7%D9%81%D8%B2%D9%88%D9%86%D9%87_%D8%AF%D8%B1_%DA%A9%D8%B1%D9%88%D9%85)**
 
 ---
 
