@@ -1,4 +1,6 @@
-/* Digikala Pure Search v1.1.0 - Zero Flicker Styles */
+/* Digikala Pure Search v2.0 - Zero Flicker Native Styles */
+
+/* 1. حذف پیش فرض کالاهای اسپانسری و آگهی ها */
 [class*="ProductList__item"]:has(dds-icon[name="badge-ad"]),
 [class*="ProductList__item"]:has(a[href*="ad_variant_id"]),
 [class*="ProductList__item"]:has(a[href*="ad_type"]),
@@ -9,12 +11,50 @@ article:has(dds-icon[name="badge-ad"]),
 article:has(a[href*="ad_variant_id"]),
 article:has(a[href*="ad_type"]),
 article:has(a[href*="adclick"]),
+.digi-pure-ad-filtered {
+    display: none !important;
+}
+
+/* 2. حذف پیش فرض شگفت انگیز و فروش ویژه */
+[class*="ProductList__item"]:has(dds-icon[name="badge-amazing"]),
+[class*="ProductList__item"]:has(dds-icon[name="badge-special-sale"]),
+article:has(dds-icon[name="badge-amazing"]),
+article:has(dds-icon[name="badge-special-sale"]),
+.digi-pure-deal-filtered {
+    display: none !important;
+}
+
+/* 3. حذف کاروسل ها و بنرهای تبلیغاتی */
 div:has(> .swiper:has(dds-icon[name="badge-ad"])),
 div:has(> div > .swiper:has(dds-icon[name="badge-ad"])),
 .swiper:has(dds-icon[name="badge-ad"]),
 div[data-cro-id*="banner"],
 div[data-cro-id*="promotion"],
 div[data-cro-id*="ad_"],
+.digi-pure-banner-filtered,
 .digi-pure-filtered {
     display: none !important;
+}
+
+/* در صورت غیرفعال شدن هر گزینه توسط کاربر در پاپ آپ */
+html.dk-allow-sponsored [class*="ProductList__item"]:has(dds-icon[name="badge-ad"]),
+html.dk-allow-sponsored article:has(dds-icon[name="badge-ad"]),
+html.dk-allow-sponsored .digi-pure-ad-filtered {
+    display: block !important;
+}
+
+html.dk-allow-deals [class*="ProductList__item"]:has(dds-icon[name="badge-amazing"]),
+html.dk-allow-deals [class*="ProductList__item"]:has(dds-icon[name="badge-special-sale"]),
+html.dk-allow-deals article:has(dds-icon[name="badge-amazing"]),
+html.dk-allow-deals article:has(dds-icon[name="badge-special-sale"]),
+html.dk-allow-deals .digi-pure-deal-filtered {
+    display: block !important;
+}
+
+html.dk-allow-banners div:has(> .swiper:has(dds-icon[name="badge-ad"])),
+html.dk-allow-banners div:has(> div > .swiper:has(dds-icon[name="badge-ad"])),
+html.dk-allow-banners .swiper:has(dds-icon[name="badge-ad"]),
+html.dk-allow-banners div[data-cro-id*="banner"],
+html.dk-allow-banners .digi-pure-banner-filtered {
+    display: block !important;
 }

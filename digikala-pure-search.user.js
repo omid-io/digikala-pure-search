@@ -7,8 +7,9 @@
 // @match        https://*.digikala.com/*
 // @match        https://digikala.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=digikala.com
-// @grant        none
-// @run-at       document-start
+// @grant        window.onurlchange
+// @grant        GM_addStyle
+// @run-at       document-end
 // @license      MIT
 // @homepageURL  https://github.com/omid-io/digikala-pure-search
 // @supportURL   https://greasyfork.org/en/scripts/593664-digikala-pure-search
