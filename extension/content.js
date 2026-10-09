@@ -182,6 +182,20 @@
                     if (container && !container.classList.contains('digi-pure-banner-filtered')) {
                         container.classList.add('digi-pure-banner-filtered');
                         container.style.display = 'none';
+                        
+                        // جمع کردن کامل والد بیرونی با کادر و ارتفاع خالی
+                        let p = container.parentElement;
+                        while (p && p !== document.body && !p.classList.contains('product-list-virtual-feed')) {
+                            if (p.className && (p.className.includes('min-h-') || p.className.includes('border-complete') || p.className.includes('rounded-large'))) {
+                                p.style.display = 'none';
+                                if (p.parentElement && p.parentElement.children.length === 1) {
+                                    p.parentElement.style.display = 'none';
+                                }
+                                break;
+                            }
+                            p = p.parentElement;
+                        }
+
                         filteredCount++;
                         changed = true;
                     }

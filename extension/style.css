@@ -1,6 +1,6 @@
-/* Digikala Pure Search v2.0 - Zero Flicker Native Styles */
+/* Digikala Pure Search v2.1 - Zero Flicker & Seamless Grid Layout */
 
-/* 1. حذف پیش فرض کالاهای اسپانسری و آگهی ها */
+/* ۱. حذف کالاهای اسپانسری و آگهی ها */
 [class*="ProductList__item"]:has(dds-icon[name="badge-ad"]),
 [class*="ProductList__item"]:has(a[href*="ad_variant_id"]),
 [class*="ProductList__item"]:has(a[href*="ad_type"]),
@@ -17,7 +17,7 @@ article:has([data-cro-id*="sponsored"]),
     display: none !important;
 }
 
-/* 2. حذف پیش فرض شگفت انگیز و فروش ویژه */
+/* ۲. حذف شگفت انگیز و فروش ویژه */
 [class*="ProductList__item"]:has(dds-icon[name="badge-amazing"]),
 [class*="ProductList__item"]:has(dds-icon[name="badge-special-sale"]),
 [class*="ProductList__item"]:has(img[src*="IncredibleOffer"]),
@@ -38,9 +38,12 @@ article:has([data-cro-id*="incredible"]),
     display: none !important;
 }
 
-/* 3. حذف کاروسل ها و بنرهای تبلیغاتی */
+/* ۳. حذف کامل کاروسل ها، بنرهای تبلیغاتی و کانتینرهای خالی آن ها */
 div:has(> .swiper:has(dds-icon[name="badge-ad"])),
 div:has(> div > .swiper:has(dds-icon[name="badge-ad"])),
+div:has(> div > div > .swiper:has(dds-icon[name="badge-ad"])),
+div[class*="min-h-"]:has(.swiper:has(dds-icon[name="badge-ad"])),
+div[class*="border-complete"]:has(.swiper:has(dds-icon[name="badge-ad"])),
 .swiper:has(dds-icon[name="badge-ad"]),
 div[data-cro-id*="banner"],
 div[data-cro-id*="promotion"],
@@ -48,6 +51,29 @@ div[data-cro-id*="ad_"],
 .digi-pure-banner-filtered,
 .digi-pure-filtered {
     display: none !important;
+}
+
+/* ۴. یکپارچه سازی گرید مجازی برای پر کردن فضاهای خالی ناشی از حذف محصولات */
+.product-list-virtual-feed > div {
+    display: grid !important;
+    gap: 0px !important;
+}
+
+@media (max-width: 1024px) {
+    .product-list-virtual-feed > div {
+        grid-template-columns: repeat(2, minmax(0px, 1fr)) !important;
+    }
+}
+
+@media (min-width: 1024px) {
+    .product-list-virtual-feed > div {
+        grid-template-columns: repeat(4, minmax(0px, 1fr)) !important;
+    }
+}
+
+.product-list-virtual-feed > div > div,
+.product-list-virtual-feed > div > div > div[style*="grid"] {
+    display: contents !important;
 }
 
 /* در صورت غیرفعال شدن هر گزینه توسط کاربر در پاپ آپ */
