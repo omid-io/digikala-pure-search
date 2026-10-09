@@ -28,6 +28,12 @@
         [class*="ProductList__item"]:has(dds-icon[name="badge-ad"]),
         [class*="ProductList__item"]:has(dds-icon[name="badge-amazing"]),
         [class*="ProductList__item"]:has(dds-icon[name="badge-special-sale"]),
+        [class*="ProductList__item"]:has(img[src*="IncredibleOffer"]),
+        [class*="ProductList__item"]:has(img[src*="SpecialOffer"]),
+        [class*="ProductList__item"]:has(img[src*="topBadge"]),
+        [class*="ProductList__item"]:has([class*="DealOfTheDay"]),
+        [class*="ProductList__item"]:has([class*="ProductPromotionTimeline"]),
+        [class*="ProductList__item"]:has([data-cro-id*="incredible"]),
         [class*="ProductList__item"]:has(a[href*="ad_variant_id"]),
         [class*="ProductList__item"]:has(a[href*="ad_type"]),
         [class*="ProductList__item"]:has(a[href*="adclick"]),
@@ -36,6 +42,12 @@
         article:has(dds-icon[name="badge-ad"]),
         article:has(dds-icon[name="badge-amazing"]),
         article:has(dds-icon[name="badge-special-sale"]),
+        article:has(img[src*="IncredibleOffer"]),
+        article:has(img[src*="SpecialOffer"]),
+        article:has(img[src*="topBadge"]),
+        article:has([class*="DealOfTheDay"]),
+        article:has([class*="ProductPromotionTimeline"]),
+        article:has([data-cro-id*="incredible"]),
         article:has(a[href*="ad_variant_id"]),
 
         /* حذف کاروسل های اسپانسری و برندهای سفارشی */
@@ -130,8 +142,18 @@
     function isAdNode(el) {
         if (!el) return false;
 
-        // ۱. آیکون های رسمی آگهی، شگفت انگیز و فروش ویژه
-        if (el.querySelector('dds-icon[name="badge-ad"], dds-icon[name="badge-amazing"], dds-icon[name="badge-special-sale"]')) return true;
+        // ۱. آیکون ها و بج های رسمی شگفت انگیز، فروش ویژه و آگهی
+        if (
+            el.querySelector('dds-icon[name="badge-ad"], dds-icon[name="badge-amazing"], dds-icon[name="badge-special-sale"]') ||
+            el.querySelector('img[src*="IncredibleOffer"]') ||
+            el.querySelector('img[src*="SpecialOffer"]') ||
+            el.querySelector('img[src*="topBadge"]') ||
+            el.querySelector('img[src*="incredible"]') ||
+            el.querySelector('[class*="DealOfTheDay"]') ||
+            el.querySelector('[class*="ProductPromotionTimeline"]')
+        ) {
+            return true;
+        }
 
         // ۲. لینک های حاوی پارامترهای تبلیغاتی و ادوارینت
         const links = el.querySelectorAll('a[href]');
@@ -152,22 +174,18 @@
         if (
             el.querySelector('[data-cro-id*="ad_"]') ||
             el.querySelector('[data-cro-id*="sponsored"]') ||
+            el.querySelector('[data-cro-id*="incredible"]') ||
             el.hasAttribute('data-ad') ||
             el.hasAttribute('data-sponsored')
         ) {
             return true;
         }
 
-        // ۴. متن برچسب های داخل کارت
-        const leafNodes = el.querySelectorAll('span, div, p, small');
-        for (const node of leafNodes) {
-            if (node.children.length === 0) {
-                const text = node.textContent.trim();
-                for (const kw of adKeywords) {
-                    if (text === kw || text.includes(kw)) {
-                        return true;
-                    }
-                }
+        // ۴. متن برچسب های داخل کارت با نرمال سازی نیم فاصله
+        const fullText = (el.innerText || el.textContent || '').replace(/[\u200c\u200b]/g, ' ');
+        for (const kw of adKeywords) {
+            if (fullText.includes(kw)) {
+                return true;
             }
         }
 

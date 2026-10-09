@@ -127,17 +127,46 @@
     function isDealNode(el) {
         if (!currentSettings.hideDeals || !el) return false;
 
-        if (el.querySelector('dds-icon[name="badge-amazing"], dds-icon[name="badge-special-sale"]')) return true;
+        // الف) بررسی بج های تصویری و وکتوری شگفت انگیز
+        if (
+            el.querySelector('img[src*="IncredibleOffer"]') ||
+            el.querySelector('img[src*="SpecialOffer"]') ||
+            el.querySelector('img[src*="topBadge"]') ||
+            el.querySelector('img[src*="incredible"]') ||
+            el.querySelector('dds-icon[name="badge-amazing"]') ||
+            el.querySelector('dds-icon[name="badge-special-sale"]')
+        ) {
+            return true;
+        }
 
-        const leafNodes = el.querySelectorAll('span, div, p, small');
-        for (const node of leafNodes) {
-            if (node.children.length === 0) {
-                const text = node.textContent.trim();
+        // ب) بررسی کلاس ها و تایمرهای فروش ویژه
+        if (
+            el.querySelector('[class*="DealOfTheDay"]') ||
+            el.querySelector('[class*="ProductPromotionTimeline"]') ||
+            el.querySelector('[data-cro-id*="incredible"]')
+        ) {
+            return true;
+        }
+
+        // ج) بررسی متنی با نرمال سازی نیم فاصله
+        const fullText = (el.innerText || el.textContent || '').replace(/[\u200c\u200b]/g, ' ');
+        if (
+            fullText.includes('فروش ویژه') ||
+            fullText.includes('شگفت انگیز') ||
+            fullText.includes('پیشنهاد شگفت انگیز')
+        ) {
+            // اطمینان از اینکه متن واقعا مربوط به نشان یا تخفیف است
+            const leafNodes = el.querySelectorAll('span, div, p, small, h3, h4');
+            for (const node of leafNodes) {
+                const text = (node.textContent || '').replace(/[\u200c\u200b]/g, ' ').trim();
                 for (const kw of dealKeywords) {
-                    if (text === kw || text.includes(kw)) return true;
+                    if (text === kw || text.includes(kw)) {
+                        return true;
+                    }
                 }
             }
         }
+
         return false;
     }
 

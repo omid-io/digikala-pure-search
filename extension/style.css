@@ -11,6 +11,8 @@ article:has(dds-icon[name="badge-ad"]),
 article:has(a[href*="ad_variant_id"]),
 article:has(a[href*="ad_type"]),
 article:has(a[href*="adclick"]),
+article:has([data-cro-id*="ad_"]),
+article:has([data-cro-id*="sponsored"]),
 .digi-pure-ad-filtered {
     display: none !important;
 }
@@ -18,8 +20,20 @@ article:has(a[href*="adclick"]),
 /* 2. حذف پیش فرض شگفت انگیز و فروش ویژه */
 [class*="ProductList__item"]:has(dds-icon[name="badge-amazing"]),
 [class*="ProductList__item"]:has(dds-icon[name="badge-special-sale"]),
+[class*="ProductList__item"]:has(img[src*="IncredibleOffer"]),
+[class*="ProductList__item"]:has(img[src*="SpecialOffer"]),
+[class*="ProductList__item"]:has(img[src*="topBadge"]),
+[class*="ProductList__item"]:has([class*="DealOfTheDay"]),
+[class*="ProductList__item"]:has([class*="ProductPromotionTimeline"]),
+[class*="ProductList__item"]:has([data-cro-id*="incredible"]),
 article:has(dds-icon[name="badge-amazing"]),
 article:has(dds-icon[name="badge-special-sale"]),
+article:has(img[src*="IncredibleOffer"]),
+article:has(img[src*="SpecialOffer"]),
+article:has(img[src*="topBadge"]),
+article:has([class*="DealOfTheDay"]),
+article:has([class*="ProductPromotionTimeline"]),
+article:has([data-cro-id*="incredible"]),
 .digi-pure-deal-filtered {
     display: none !important;
 }
@@ -43,10 +57,16 @@ html.dk-allow-sponsored .digi-pure-ad-filtered {
     display: block !important;
 }
 
-html.dk-allow-deals [class*="ProductList__item"]:has(dds-icon[name="badge-amazing"]),
-html.dk-allow-deals [class*="ProductList__item"]:has(dds-icon[name="badge-special-sale"]),
-html.dk-allow-deals article:has(dds-icon[name="badge-amazing"]),
-html.dk-allow-deals article:has(dds-icon[name="badge-special-sale"]),
+html.dk-allow-deals [class*="ProductList__item"]:has(img[src*="IncredibleOffer"]),
+html.dk-allow-deals [class*="ProductList__item"]:has(img[src*="SpecialOffer"]),
+html.dk-allow-deals [class*="ProductList__item"]:has(img[src*="topBadge"]),
+html.dk-allow-deals [class*="ProductList__item"]:has([class*="DealOfTheDay"]),
+html.dk-allow-deals [class*="ProductList__item"]:has([class*="ProductPromotionTimeline"]),
+html.dk-allow-deals article:has(img[src*="IncredibleOffer"]),
+html.dk-allow-deals article:has(img[src*="SpecialOffer"]),
+html.dk-allow-deals article:has(img[src*="topBadge"]),
+html.dk-allow-deals article:has([class*="DealOfTheDay"]),
+html.dk-allow-deals article:has([class*="ProductPromotionTimeline"]),
 html.dk-allow-deals .digi-pure-deal-filtered {
     display: block !important;
 }
