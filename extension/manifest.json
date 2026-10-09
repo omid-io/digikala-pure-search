@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Digikala Pure Search | دیجی کالا سرچ خالص",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "حذف هوشمند و خودکار کالاهای اسپانسری و آگهی های تبلیغاتی از دیجی کالا برای نمایش نتایج ارگانیک",
   "author": "Omid Zaferi (https://github.com/omid-io)",
   "icons": {
@@ -15,6 +15,7 @@
         "https://*.digikala.com/*",
         "https://digikala.com/*"
       ],
+      "css": ["style.css"],
       "js": ["content.js"],
       "run_at": "document_start"
     }

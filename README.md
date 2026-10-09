@@ -7,7 +7,7 @@
 ### 🧹 حذف هوشمند تبلیغات، کالاهای سفارشی و اسپانسری از دیجی کالا
 **مشاهده رتبه بندی ۱۰۰٪ واقعی، ارگانیک و دست نخورده در تمام دسته بندی ها و جستجوها**
 
-[![Install with Tampermonkey](https://img.shields.io/badge/GreasyFork-1--Click_Install-00e5ff?style=for-the-badge&logo=tampermonkey&logoColor=black)](https://update.greasyfork.org/scripts/593664/Digikala%20Pure%20Search%20%7C%20%D8%AD%D8%B0%D9%81%20%D8%AA%D8%A8%D9%84%DB%8C%D8%BA%D8%A7%D8%AA%20%D9%88%20%DA%A9%D8%A7%D9%84%D8%A7%D9%87%D8%A7%DB%8C%20%D8%A7%D8%B3%D9%BE%D8%A7%D9%86%D8%B3%D8%B1%DB%8C%20%D8%AF%DB%8C%D8%AC%DB%8C%E2%80%8C%DA%A9%D8%A7%D9%84%D8%A7.user.js)
+[![Install with Tampermonkey](https://img.shields.io/badge/GreasyFork-1--Click_Install-00e5ff?style=for-the-badge&logo=tampermonkey&logoColor=black)](https://update.greasyfork.org/scripts/593664/Digikala%20Pure%20Search%20%7C%20%D8%AD%D8%B0%D9%81%20%D8%AA%D8%A8%D9%84%DB%8C%D8%BA%D8%A7%D8%AA%20%D9%88%20%DA%A9%D8%A7%D9%84%D8%A7%D9%87%D8%A7%DB%8C%20%D8%A7%D8%B3%D9%BE%D8%A7%D9%86%D8%B3%D8%B1%DB%8C%20%D8%AF%DB%8C%D8%AC%DB%8C%20%DA%A9%D8%A7%D9%84%D8%A7.user.js)
 [![Direct GitHub Raw Install](https://img.shields.io/badge/GitHub_Raw-Direct_Install-white?style=for-the-badge&logo=github&logoColor=black)](https://raw.githubusercontent.com/omid-io/digikala-pure-search/main/digikala-pure-search.user.js)
 [![Download Extension ZIP](https://img.shields.io/badge/Chrome_Extension-Download_ZIP-yellow?style=for-the-badge&logo=googlechrome&logoColor=black)](https://github.com/omid-io/digikala-pure-search/archive/refs/heads/main.zip)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
@@ -27,7 +27,7 @@
 
 این محصولات **واقعا پرفروش یا ارزان نیستند** و قرار گرفتن آن ها در صدر نتایج باعث خطای دید و خرید کالاهای نامناسب می شود.
 
-این ابزار با **پالایش هوشمند در سطح CSS و DOM (Zero-Flicker)**، کالاهای تبلیغاتی و بنرهای نامرتبط را حذف کرده تا **فقط و فقط ترتیب واقعی فروش و محصولات ارگانیک** به شما نمایش داده شود.
+این ابزار با **پالایش هوشمند در سطح CSS و DOM (Zero-Flicker)**، کالاهای تبلیغاتی، برچسب های سفارشی، شگفت انگیزهای تحمیلی و بنرهای نامرتبط را حذف کرده تا **فقط و فقط ترتیب واقعی فروش و محصولات ارگانیک** به شما نمایش داده شود.
 
 ---
 
@@ -42,10 +42,12 @@
 
 1. ابتدا افزونه رایگان **[Tampermonkey](https://www.tampermonkey.net/)** (یا Violentmonkey) را روی مرورگر خود نصب کنید.
 2. روی یکی از دو لینک زیر کلیک کنید:
-   * 👉 **[نصب ۱-کلیک از مخزن جهانی Greasy Fork (سرور رسمی)](https://update.greasyfork.org/scripts/593664/Digikala%20Pure%20Search%20%7C%20%D8%AD%D8%B0%D9%81%20%D8%AA%D8%A8%D9%84%DB%8C%D8%BA%D8%A7%D8%AA%20%D9%88%20%DA%A9%D8%A7%D9%84%D8%A7%D9%87%D8%A7%DB%8C%20%D8%A7%D8%B3%D9%BE%D8%A7%D9%86%D8%B3%D8%B1%DB%8C%20%D8%AF%DB%8C%D8%AC%DB%8C%E2%80%8C%DA%A9%D8%A7%D9%84%D8%A7.user.js)**
+   * 👉 **[نصب ۱-کلیک از مخزن جهانی Greasy Fork (سرور رسمی)](https://update.greasyfork.org/scripts/593664/Digikala%20Pure%20Search%20%7C%20%D8%AD%D8%B0%D9%81%20%D8%AA%D8%A8%D9%84%DB%8C%D8%BA%D8%A7%D8%AA%20%D9%88%20%DA%A9%D8%A7%D9%84%D8%A7%D9%87%D8%A7%DB%8C%20%D8%A7%D8%B3%D9%BE%D8%A7%D9%86%D8%B3%D8%B1%DB%8C%20%D8%AF%DB%8C%D8%AC%DB%8C%20%DA%A9%D8%A7%D9%84%D8%A7.user.js)**
    * 👉 **[نصب مستقیم از لینک سورس گیت هاب (GitHub Raw)](https://raw.githubusercontent.com/omid-io/digikala-pure-search/main/digikala-pure-search.user.js)**
 3. پنجره Tampermonkey باز می شود؛ دکمه **Install** را بزنید.
 4. وارد [دیجی کالا](https://www.digikala.com/) شوید؛ تمام تبلیغات فیلتر شده و نشانگر زنده در گوشه صفحه فعال خواهد بود!
+
+> 💡 **نکته مهم برای کاربران گوگل کروم:** در نسخه‌های جدید کروم به دلیل سیاست Manifest V3، برای فعال شدن اسکریپت‌های Tampermonkey کافی است وارد صفحه `chrome://extensions/` شوید و کلید **Developer mode (حالت برنامه‌نویس)** را در گوشه بالا فعال کنید. همچنین می‌توانید بدون نیاز به تمپرمانکی از «روش دوم (افزونه مستقل کروم)» استفاده نمایید.
 
 ---
 

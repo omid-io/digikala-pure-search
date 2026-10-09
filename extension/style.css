@@ -1,14 +1,20 @@
-article:has(use[*|href="#ads"]),
-article:has(use[href="#ads"]),
-article:has(svg[style*="--color-ad"]),
+/* Digikala Pure Search v1.1.0 - Zero Flicker Styles */
+[class*="ProductList__item"]:has(dds-icon[name="badge-ad"]),
+[class*="ProductList__item"]:has(a[href*="ad_variant_id"]),
+[class*="ProductList__item"]:has(a[href*="ad_type"]),
+[class*="ProductList__item"]:has(a[href*="adclick"]),
+[class*="ProductList__item"]:has([data-cro-id*="ad_"]),
+[class*="ProductList__item"]:has([data-cro-id*="sponsored"]),
+article:has(dds-icon[name="badge-ad"]),
 article:has(a[href*="ad_variant_id"]),
-div[data-testid="product-card"]:has(a[href*="ad_variant_id"]),
-div[data-testid="product-card"]:has(use[*|href="#ads"]),
-div[class*="ProductList__item"]:has(a[href*="ad_variant_id"]),
-div[class*="ProductList__item"]:has(use[*|href="#ads"]),
-div[class*="SponsoredBrand"],
-div[class*="c-adplacement"],
-a[href*="banner_id"],
-.dk-purged-ad {
+article:has(a[href*="ad_type"]),
+article:has(a[href*="adclick"]),
+div:has(> .swiper:has(dds-icon[name="badge-ad"])),
+div:has(> div > .swiper:has(dds-icon[name="badge-ad"])),
+.swiper:has(dds-icon[name="badge-ad"]),
+div[data-cro-id*="banner"],
+div[data-cro-id*="promotion"],
+div[data-cro-id*="ad_"],
+.digi-pure-filtered {
     display: none !important;
 }

@@ -7,12 +7,16 @@
     styleEl.textContent = `
         /* مخفی سازی فوری در سطح گرید برای جلوگیری از خالی ماندن جای کالا */
         [class*="ProductList__item"]:has(dds-icon[name="badge-ad"]),
+        [class*="ProductList__item"]:has(dds-icon[name="badge-amazing"]),
+        [class*="ProductList__item"]:has(dds-icon[name="badge-special-sale"]),
         [class*="ProductList__item"]:has(a[href*="ad_variant_id"]),
         [class*="ProductList__item"]:has(a[href*="ad_type"]),
         [class*="ProductList__item"]:has(a[href*="adclick"]),
         [class*="ProductList__item"]:has([data-cro-id*="ad_"]),
         [class*="ProductList__item"]:has([data-cro-id*="sponsored"]),
         article:has(dds-icon[name="badge-ad"]),
+        article:has(dds-icon[name="badge-amazing"]),
+        article:has(dds-icon[name="badge-special-sale"]),
         article:has(a[href*="ad_variant_id"]),
 
         /* حذف کاروسل های اسپانسری و برندهای سفارشی */
@@ -92,13 +96,23 @@
         }
     }
 
-    const adKeywords = ['سفارشی', 'آگهی', 'اسپانسری', 'Sponsored', 'Ad'];
+    const adKeywords = [
+        'سفارشی',
+        'آگهی',
+        'اسپانسری',
+        'Sponsored',
+        'Ad',
+        'شگفت انگیز',
+        'شگفت انگیزها',
+        'پیشنهاد شگفت انگیز',
+        'فروش ویژه'
+    ];
 
     function isAdNode(el) {
         if (!el) return false;
 
-        // ۱. آیکون رسمی آگهی در دیجی کالا
-        if (el.querySelector('dds-icon[name="badge-ad"]')) return true;
+        // ۱. آیکون های رسمی آگهی، شگفت انگیز و فروش ویژه
+        if (el.querySelector('dds-icon[name="badge-ad"], dds-icon[name="badge-amazing"], dds-icon[name="badge-special-sale"]')) return true;
 
         // ۲. لینک های حاوی پارامترهای تبلیغاتی و ادوارینت
         const links = el.querySelectorAll('a[href]');
@@ -130,8 +144,10 @@
         for (const node of leafNodes) {
             if (node.children.length === 0) {
                 const text = node.textContent.trim();
-                if (adKeywords.includes(text)) {
-                    return true;
+                for (const kw of adKeywords) {
+                    if (text === kw || text.includes(kw)) {
+                        return true;
+                    }
                 }
             }
         }
