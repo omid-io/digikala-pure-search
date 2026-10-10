@@ -245,57 +245,31 @@
             updateBadge();
         }
 
-        // ج) مرتب سازی و فشرده سازی گرید محصولات برای پر کردن خانه های خالی
-        repackGrid();
+        // ج) تنظیم هوشمند عرض ستون های هر ردیف جهت حذف خانه های خالی بدون شکستن اسکرول
+        adjustGridRows();
     }
 
-    function repackGrid() {
+    function adjustGridRows() {
         const feed = document.querySelector('.product-list-virtual-feed');
         if (!feed) return;
 
-        const grids = Array.from(feed.querySelectorAll('div[style*="grid"]'));
-        if (grids.length === 0) return;
-
-        // ۱. استخراج تمام کارت های معتبر
-        const validCards = [];
-        grids.forEach(grid => {
-            Array.from(grid.children).forEach(child => {
-                const art = child.querySelector('article') || (child.tagName === 'ARTICLE' ? child : null);
-                if (
-                    art &&
-                    !art.classList.contains('digi-pure-ad-filtered') &&
-                    !art.classList.contains('digi-pure-deal-filtered') &&
-                    window.getComputedStyle(art).display !== 'none'
-                ) {
-                    validCards.push(child);
-                }
-            });
-        });
-
-        if (validCards.length === 0) return;
-
-        // ۲. چیدن متقارن و بدون خلاء کالاها در بسته های ۴ تایی
-        for (let i = 0; i < validCards.length; i++) {
-            const targetGridIdx = Math.floor(i / 4);
-            if (grids[targetGridIdx]) {
-                if (validCards[i].parentElement !== grids[targetGridIdx]) {
-                    grids[targetGridIdx].appendChild(validCards[i]);
-                }
-            }
-        }
-
-        // ۳. مخفی کردن کانتینرهای خالی
-        grids.forEach(g => {
-            const hasVisible = Array.from(g.children).some(c => {
-                const art = c.querySelector('article') || (c.tagName === 'ARTICLE' ? child : null);
+        feed.querySelectorAll('div[style*="grid"]').forEach(g => {
+            const visibleChildren = Array.from(g.children).filter(c => {
+                const art = c.querySelector('article') || (c.tagName === 'ARTICLE' ? c : null);
                 return art && window.getComputedStyle(art).display !== 'none';
             });
-            if (!hasVisible) {
+
+            const count = visibleChildren.length;
+            if (count === 0) {
                 g.style.display = 'none';
                 if (g.parentElement && g.parentElement !== feed) {
                     g.parentElement.style.height = '0px';
                 }
+            } else if (count > 0 && count < 4) {
+                g.style.gridTemplateColumns = `repeat(${count}, minmax(0px, 1fr))`;
+                g.style.display = 'grid';
             } else {
+                g.style.gridTemplateColumns = 'repeat(4, minmax(0px, 1fr))';
                 g.style.display = 'grid';
             }
         });
