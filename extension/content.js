@@ -11,15 +11,24 @@
     let filteredCount = 0;
     let badgeEl = null;
 
+    // همگام سازی تنظیمات با اینترسپتور صفحه اصلی
+    function syncSettingsToPage() {
+        if (!document.documentElement) return;
+        document.documentElement.dataset.digiPureSettings = JSON.stringify(currentSettings);
+    }
+
     // ۲. بارگذاری تنظیمات از حافظه پایدار کروم
     if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
         chrome.storage.local.get(currentSettings, (items) => {
             if (items) {
                 currentSettings = items;
+                syncSettingsToPage();
                 applyRootClasses();
                 cleanDOM();
             }
         });
+    } else {
+        syncSettingsToPage();
     }
 
     function applyRootClasses() {
@@ -46,12 +55,34 @@
     }
 
     applyRootClasses();
+    syncSettingsToPage();
 
-    // ۳. گوش دادن به پیام های پاپ آپ جهت تغییر تنظیمات زنده
+    // تزریق فال بک اینترسپتور در صورتی که اجرا نشده باشد
+    function injectInterceptorFallback() {
+        if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.getURL) {
+            const script = document.createElement('script');
+            script.src = chrome.runtime.getURL('interceptor.js');
+            script.async = false;
+            (document.head || document.documentElement).appendChild(script);
+            script.onload = () => script.remove();
+        }
+    }
+    injectInterceptorFallback();
+
+    // ۳. گوش دادن به آمار زنده ارسالی از رهگیر شبکه
+    window.addEventListener('digi-pure-stats-sync', (e) => {
+        if (e.detail && typeof e.detail.count === 'number') {
+            filteredCount = e.detail.count;
+            updateBadge();
+        }
+    });
+
+    // ۴. گوش دادن به پیام های پاپ آپ جهت تغییر تنظیمات زنده
     if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.onMessage) {
         chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             if (message.action === 'settingsChanged' && message.settings) {
                 currentSettings = message.settings;
+                syncSettingsToPage();
                 applyRootClasses();
                 cleanDOM();
                 sendResponse({ status: 'ok' });
@@ -62,7 +93,7 @@
         });
     }
 
-    // ۴. ساخت نشانگر زنده در گوشه صفحه دیجی کالا
+    // ۵. ساخت نشانگر زنده در گوشه صفحه دیجی کالا
     function updateBadge() {
         if (!document.body) return;
         if (!badgeEl) {
@@ -127,7 +158,6 @@
     function isDealNode(el) {
         if (!currentSettings.hideDeals || !el) return false;
 
-        // الف) بررسی بج های تصویری و وکتوری شگفت انگیز
         if (
             el.querySelector('img[src*="IncredibleOffer"]') ||
             el.querySelector('img[src*="SpecialOffer"]') ||
@@ -139,7 +169,6 @@
             return true;
         }
 
-        // ب) بررسی کلاس ها و تایمرهای فروش ویژه
         if (
             el.querySelector('[class*="DealOfTheDay"]') ||
             el.querySelector('[class*="ProductPromotionTimeline"]') ||
@@ -148,14 +177,12 @@
             return true;
         }
 
-        // ج) بررسی متنی با نرمال سازی نیم فاصله
         const fullText = (el.innerText || el.textContent || '').replace(/[\u200c\u200b]/g, ' ');
         if (
             fullText.includes('فروش ویژه') ||
             fullText.includes('شگفت انگیز') ||
             fullText.includes('پیشنهاد شگفت انگیز')
         ) {
-            // اطمینان از اینکه متن واقعا مربوط به نشان یا تخفیف است
             const leafNodes = el.querySelectorAll('span, div, p, small, h3, h4');
             for (const node of leafNodes) {
                 const text = (node.textContent || '').replace(/[\u200c\u200b]/g, ' ').trim();
@@ -173,7 +200,7 @@
     function cleanDOM() {
         let changed = false;
 
-        // الف) کاروسل های اسپانسری بین نتایج
+        // کاروسل های اسپانسری و بنرهای بین نتایج
         if (currentSettings.hideBanners) {
             const swipers = document.querySelectorAll('.swiper, [class*="swiper"]');
             swipers.forEach(swiper => {
@@ -182,8 +209,7 @@
                     if (container && !container.classList.contains('digi-pure-banner-filtered')) {
                         container.classList.add('digi-pure-banner-filtered');
                         container.style.display = 'none';
-                        
-                        // جمع کردن کامل والد بیرونی با کادر و ارتفاع خالی
+
                         let p = container.parentElement;
                         while (p && p !== document.body && !p.classList.contains('product-list-virtual-feed')) {
                             if (p.className && (p.className.includes('min-h-') || p.className.includes('border-complete') || p.className.includes('rounded-large'))) {
@@ -213,12 +239,11 @@
             });
         }
 
-        // ب) کارت های کالا در تمام صفحات جستجو و دسته بندی ها
+        // بررسی تکمیلی المان های کش شده در DOM به عنوان لایه دفاعی دوم
         const candidates = document.querySelectorAll('article, [class*="ProductList__item"], [data-product-box="true"]');
         candidates.forEach(item => {
             const gridCell = item.closest('[class*="ProductList__item"]') || item.closest('article') || item;
 
-            // بررسی کالای اسپانسری
             if (currentSettings.hideSponsored && isSponsoredNode(item)) {
                 if (!gridCell.classList.contains('digi-pure-ad-filtered')) {
                     gridCell.classList.add('digi-pure-ad-filtered');
@@ -229,7 +254,6 @@
                 return;
             }
 
-            // بررسی شگفت انگیز و فروش ویژه
             if (currentSettings.hideDeals && isDealNode(item)) {
                 if (!gridCell.classList.contains('digi-pure-deal-filtered')) {
                     gridCell.classList.add('digi-pure-deal-filtered');
@@ -244,38 +268,9 @@
         if (changed) {
             updateBadge();
         }
-
-        // ج) تنظیم هوشمند عرض ستون های هر ردیف جهت حذف خانه های خالی بدون شکستن اسکرول
-        adjustGridRows();
     }
 
-    function adjustGridRows() {
-        const feed = document.querySelector('.product-list-virtual-feed');
-        if (!feed) return;
-
-        feed.querySelectorAll('div[style*="grid"]').forEach(g => {
-            const visibleChildren = Array.from(g.children).filter(c => {
-                const art = c.querySelector('article') || (c.tagName === 'ARTICLE' ? c : null);
-                return art && window.getComputedStyle(art).display !== 'none';
-            });
-
-            const count = visibleChildren.length;
-            if (count === 0) {
-                g.style.display = 'none';
-                if (g.parentElement && g.parentElement !== feed) {
-                    g.parentElement.style.height = '0px';
-                }
-            } else if (count > 0 && count < 4) {
-                g.style.gridTemplateColumns = `repeat(${count}, minmax(0px, 1fr))`;
-                g.style.display = 'grid';
-            } else {
-                g.style.gridTemplateColumns = 'repeat(4, minmax(0px, 1fr))';
-                g.style.display = 'grid';
-            }
-        });
-    }
-
-    // ۵. پایش هوشمند با بهینه سازی فریم ریت (rAF Debounced Observer)
+    // پایش فریم ریت با rAF
     let isScheduled = false;
     function scheduleClean() {
         if (!isScheduled) {
@@ -287,7 +282,7 @@
         }
     }
 
-    // ۶. رهگیری ناوبری کلاینت در Next.js SPA
+    // رهگیری تغییر صفحه در Next.js SPA
     function hookHistory() {
         const pushState = history.pushState;
         history.pushState = function () {
@@ -307,6 +302,7 @@
     const observer = new MutationObserver(scheduleClean);
 
     function init() {
+        syncSettingsToPage();
         cleanDOM();
         updateBadge();
         hookHistory();
@@ -326,6 +322,4 @@
     } else {
         init();
     }
-
-    console.log('%c🚀 Digikala Pure Search Extension v2.0 Active | Developer: Omid Zaferi (https://github.com/omid-io)', 'color: #00e5ff; font-weight: bold; font-size: 12px;');
 })();

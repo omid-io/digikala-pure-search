@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Digikala Pure Search | دیجی کالا سرچ خالص",
-  "version": "2.1.0",
-  "description": "حذف هوشمند کالاهای اسپانسری، شگفت انگیز و آگهی های دیجی کالا برای نمایش نتایج ارگانیک",
+  "version": "2.2.0",
+  "description": "حذف هوشمند کالاهای اسپانسری، شگفت انگیز و آگهی های دیجی کالا برای نمایش نتایج ارگانیک با چیدمان دقیق ۴ کالا در ردیف",
   "author": "Omid Zaferi (https://github.com/omid-io)",
   "icons": {
     "16": "icon16.png",
@@ -27,9 +27,24 @@
         "https://*.digikala.com/*",
         "https://digikala.com/*"
       ],
+      "js": ["interceptor.js"],
+      "world": "MAIN",
+      "run_at": "document_start"
+    },
+    {
+      "matches": [
+        "https://*.digikala.com/*",
+        "https://digikala.com/*"
+      ],
       "css": ["style.css"],
       "js": ["content.js"],
       "run_at": "document_start"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["interceptor.js"],
+      "matches": ["https://*.digikala.com/*", "https://digikala.com/*"]
     }
   ]
 }
